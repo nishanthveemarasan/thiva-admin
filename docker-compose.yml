@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  thiva_admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: thiva_admin
+    container_name: thiva_admin
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "127.0.0.1:${APP_PORT:-3800}:3000"
+    volumes:
+      - ./:/usr/src/app
+    networks:
+      - app-network-front-end
+      - shared-network  # Connect to shared-network for external communication
+
+networks:
+  app-network-front-end:
+    driver: bridge  # Internal network for communication within the Docker Compose project
+  shared-network:
+    external: true  # External network to communicate with services outside the Docker Compose project
