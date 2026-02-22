@@ -27,9 +27,12 @@
     "@coreui/react-chartjs": "^3.0.0",
     "@coreui/utils": "^2.0.2",
     "@popperjs/core": "^2.11.8",
+    "@reduxjs/toolkit": "^2.11.2",
+    "axios": "^1.13.5",
     "chart.js": "^4.5.1",
     "classnames": "^2.5.1",
     "core-js": "^3.47.0",
+    "crypto-js": "^4.2.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
@@ -39,6 +42,7 @@
     "simplebar-react": "^3.3.2"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.23",
     "eslint": "^9.39.2",

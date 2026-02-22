@@ -1,7 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 
 const DefaultLayout = () => {
+  useEffect(() => {
+    const token = localStorage.getItem('ax_7689832T');
+    if (!token) {
+      navigate('/login')
+    }
+  }, [])
   return (
     <div>
       <AppSidebar />
