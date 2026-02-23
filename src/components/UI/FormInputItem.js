@@ -1,23 +1,28 @@
 import CIcon from "@coreui/icons-react";
-import { CInputGroup, CInputGroupText, CFormInput } from "@coreui/react";
+import { CInputGroup, CInputGroupText, CFormInput, CFormLabel } from "@coreui/react";
 
 const FormInputItem = ({
-  placeholder,
   autoComplete,
-  type,
+  type="text",
   value,
   input,
   change,
-  icon,
   valid,
   error,
+  placeholder="",
+  icon= null,
+  formLable = null,
+  className="",
+  appendIcon = false,
+  clickAppend
 }) => {
   return (
-    <div className="mb-3">
+    <div className={`mb-3 ${className}`}>
+     {formLable && <CFormLabel htmlFor="exampleFormControlTextarea1">{formLable}</CFormLabel>}
       <CInputGroup>
-        <CInputGroupText>
+        {icon && <CInputGroupText>
           <CIcon icon={icon} />
-        </CInputGroupText>
+        </CInputGroupText>}
         <CFormInput
           placeholder={placeholder}
           autoComplete={autoComplete}
@@ -25,6 +30,7 @@ const FormInputItem = ({
           value={value}
           onChange={(e) => change(e.target.value, input)}
         />
+        {appendIcon && <CInputGroupText onClick={clickAppend}><CIcon icon={appendIcon} /></CInputGroupText>}
       </CInputGroup>
       {valid && <p style={{ color: "red", fontSize: "10px" }}>{error}</p>}
     </div>

@@ -51,8 +51,21 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
+const WHeader = React.lazy(() => import('./containers/home/Header'))
+const WContact = React.lazy(() => import('./containers/home/Contact'))
+const WAboutMe = React.lazy(() => import('./containers/home/AboutMe'))
+const WExperience = React.lazy(() => import('./containers/home/Experience'))
+const WMyServices = React.lazy(() => import('./containers/services/MyServices'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  { path: '/home-page', name: 'Home Page', exact: true },
+  { path: '/home-page/header', name: 'Header', element: WHeader },
+  { path: '/home-page/contact', name: 'Header', element: WContact },
+  { path: '/about', name: 'About Page', exact: true },
+  { path: '/about/me', name: 'About Me', element: WAboutMe },
+  { path: '/services', name: 'My Services', exact: true },
+  { path: '/services/list', name: 'List', element: WMyServices },
+  { path: '/about/experience', name: 'Experience And Education', element: WExperience },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

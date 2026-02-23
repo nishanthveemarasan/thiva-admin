@@ -65,3 +65,7 @@ body {
     --cui-footer-bg: var(--cui-body-bg);
   }
 }
+
+.my-ck-editor .ck-editor__editable_inline {
+  min-height: var(--editor-height);
+}

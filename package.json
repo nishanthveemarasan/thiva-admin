@@ -19,6 +19,7 @@
     "start": "vite"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^11.0.1",
     "@coreui/chartjs": "^4.1.0",
     "@coreui/coreui": "^5.5.0",
     "@coreui/icons": "^3.0.1",
@@ -30,6 +31,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.5",
     "chart.js": "^4.5.1",
+    "ckeditor5": "^47.5.0",
     "classnames": "^2.5.1",
     "core-js": "^3.47.0",
     "crypto-js": "^4.2.0",
