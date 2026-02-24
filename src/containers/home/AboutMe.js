@@ -1,14 +1,46 @@
 import React, { useState } from "react";
 import MyCKEditor from "../../components/UI/MyCKEditor";
-import { required } from "../../components/Helper/Validator";
+import { email, image, required } from "../../components/Helper/Validator";
 import FormFileItem from "../../components/UI/FormFileItem";
+import AButton from "../../components/UI/AButton";
+import FormInputItem from "../../components/UI/FormInputItem";
 const AboutMe = () => {
   const [form, setForm] = useState({
+    first_name: {
+      value: "",
+      error: "First Name is required",
+      valid: false,
+      validators: [required],
+    },
+    last_name: {
+      value: "",
+      error: "Last Name is required",
+      valid: false,
+      validators: [required],
+    },
+    phone: {
+      value: "",
+      error: "Phone number is required",
+      valid: false,
+      validators: [required],
+    },
+    email: {
+      value: "",
+      error: "Email Address is required",
+      valid: false,
+      validators: [required, email],
+    },
+    address: {
+      value: "",
+      valid: false,
+      error: "Address is required",
+      validators: [required],
+    },
     bottom_line: {
-        value: "",
-        error: "Bottom Line is required",
-        valid: false,
-        validators: [required],
+      value: "",
+      error: "Bottom Line is required",
+      valid: false,
+      validators: [required],
     },
     biography: {
       value: "",
@@ -20,12 +52,12 @@ const AboutMe = () => {
       value: "",
       valid: false,
       src: "",
-      validators: [required],
+      validators: [image],
       error: "Image is required",
     },
   });
 
-  const onChangeHandler = (value, name, src = null) => {
+  const onChangeHandler = (value, name) => {
     let isValid = true;
     form[name].validators.forEach((validator) => {
       isValid = isValid && validator(value);
@@ -36,17 +68,101 @@ const AboutMe = () => {
         ...form[name],
         value,
         valid: isValid,
-        src: name === "image" ? src : null,
+        src: name === "image" ? URL.createObjectURL(value) : null,
       },
     });
   };
 
+  const onSubmitHandler = () => {
+    let isFormValid = true;
+    for (const key in form) {
+      form[key].validators.forEach((validator) => {
+        isFormValid = isFormValid && validator(form[key].value);
+      });
+    }
+    if (isFormValid) {
+      const formData = {
+        first_name: form.first_name.value.trim(),
+        last_name: form.last_name.value.trim(),
+        phone: form.phone.value.trim(),
+        email: form.email.value.trim(),
+        address: form.address.value.trim(),
+        bottom_line: form.bottom_line.value.trim(),
+        biography: form.biography.value.trim(),
+        image: form.image.value,
+      };
+      console.log(formData);
+    }
+  };
+
   return (
     <>
-     <div className="mb-4">
+      <div className="d-flex justify-content-end">
+        <AButton
+          click={onSubmitHandler}
+          btnLabel={
+            <>
+              <span className="me-2">Save</span>
+            </>
+          }
+        />
+      </div>
+      <div className="mb-4">
+        <div className="row">
+          <FormInputItem
+              autoComplete="first-name"
+              value={form.first_name.value}
+              change={onChangeHandler}
+              input="first_name"
+              formLable={"First Name"}
+              className="col-12 col-md-3"
+          />
+          <FormInputItem
+              autoComplete="last-name"
+              value={form.last_name.value}
+              change={onChangeHandler}
+              input="last_name"
+              formLable={"Last Name"}
+              className="col-12 col-md-3"
+            />
+        </div>
+        <div className="row">
+          <FormInputItem
+            autoComplete="phone-number"
+            type="text"
+            value={form.phone.value}
+            change={onChangeHandler}
+            input="phone"
+            formLable={"Phone Number"}
+            className="col-12 col-md-6"
+          />
+        </div>
+        <div className="row">
+          <FormInputItem
+            autoComplete="email"
+            type="email"
+            value={form.email.value}
+            change={onChangeHandler}
+            input="email"
+            formLable={"Email Address"}
+            className="col-12 col-md-6"
+          />
+        </div>
+        <div className="row">
+          <FormInputItem
+            autoComplete="address"
+            type="text"
+            value={form.address.value}
+            change={onChangeHandler}
+            input="address"
+            formLable={"Address"}
+            className="col-12 col-md-6"
+          />
+        </div>
         <div className="text-2xl font-bold mb-1">Bottom Line</div>
         <MyCKEditor
           value={form.bottom_line.value}
+          type="bottom_line"
           onChange={onChangeHandler}
           placeholder={"About Me content"}
         />
@@ -55,6 +171,7 @@ const AboutMe = () => {
         <div className="text-2xl font-bold mb-1">Biography</div>
         <MyCKEditor
           value={form.biography.value}
+          type="biography"
           onChange={onChangeHandler}
           placeholder={"About Me content"}
           height="300px"

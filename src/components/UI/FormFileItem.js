@@ -9,11 +9,13 @@ const FormFileItem = ({btnLabel, imgId="selectImageFile", change}) => {
     const onChangeImageHandler = (e) => {
         if (e.target.files.length > 0) {
             let value = e.target.files[0];
-            let reader = new FileReader()
-            reader.readAsDataURL(e.target.files[0])
-            reader.onload = function (e) {
-              change(e.target.result, "image", (URL.createObjectURL(value)));
-            }
+            change(value, "image");
+            // console.log(value);
+            // let reader = new FileReader()
+            // reader.readAsDataURL(e.target.files[0])
+            // reader.onload = function (e) {
+            //   change(e.target.result, "image", (URL.createObjectURL(value)));
+            // }
             // previewImg(URL.createObjectURL(value));
           }
         };
@@ -26,7 +28,7 @@ const FormFileItem = ({btnLabel, imgId="selectImageFile", change}) => {
         </CButton>
         <div className="mb-3 d-none">
             <CFormLabel htmlFor={imgId}>Default file input example</CFormLabel>
-            <CFormInput type="file" id={imgId} onChange={(e) => onChangeImageHandler(e)} />
+            <CFormInput type="file" accept="image/*" id={imgId} onChange={(e) => onChangeImageHandler(e)} />
         </div>
       </CInputGroup>
     </div>

@@ -70,8 +70,16 @@ const Skills = () => {
   const onRemoveSkillHandler = (index) => {
     dispatch(experienceStoreActions.removeSkill(index));
   }
+  const onSubmitHandler = () => {
+    console.log(skills);
+  }
   return (
     <>
+    <div className="d-flex justify-content-end">
+            <AButton click={onSubmitHandler} btnLabel={<>
+                <span className="me-2">Save</span>
+              </>} />
+          </div>
       <div className="border rounded p-3 mb-4 col-12 col-md-6">
         <div className="row">
           <FormInputItem

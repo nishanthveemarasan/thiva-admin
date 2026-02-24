@@ -31,7 +31,7 @@ const EperienceCard = () => {
         to: {
           value: "",
           error: "Experience End year is required",
-          valid: false,
+          valid: true,
           validators: [required],
         },
         role: {
@@ -60,6 +60,7 @@ const EperienceCard = () => {
         form[name].validators.forEach((validator) => {
           isValid = isValid && validator(value);
         });
+        if(name == "to" && value == "") isValid = true
         setForm({
           ...form,
           [name]: {
@@ -74,14 +75,15 @@ const EperienceCard = () => {
         setSubmitted(true);
         let isFormValid = true;
         for (const key in form) {
+            if(key === "to" && form[key].value === "") continue;
           form[key].validators.forEach((validator) => {
             isFormValid = isFormValid && validator(form[key].value);
           });
         }
         if (isFormValid) {
             const formData = {
-                from: form.from.value,
-                to: form.to.value,
+                from: +form.from.value,
+                to: form.to.value ? +form.to.value : "",
                 role: form.role.value.trim(),
                 company: form.company.value.trim(),
                 description: form.description.value.trim(),
@@ -117,13 +119,21 @@ const EperienceCard = () => {
             });
             setSubmitted(false);
     }
+
+    const onSubmitHandler = () => {
+        console.log(experience);
+    }
       return <>
+      <div className="d-flex justify-content-end">
+        <AButton click={onSubmitHandler} btnLabel={<>
+            <span className="me-2">Save</span>
+          </>} />
+      </div>
       <div className="border rounded p-3 mb-4 col-12 col-md-6">
         <div className="row">
             <FormInputItem
                 autoComplete="start-year"
                 value={form.from.value}
-                type="number"
                 change={onChangeHandler}
                 valid={!form.from.valid && submitted}
                 error={form.from.error}
@@ -134,7 +144,6 @@ const EperienceCard = () => {
             <FormInputItem
                 autoComplete="end-year"
                 value={form.to.value}
-                type="number"
                 change={onChangeHandler}
                 valid={!form.to.valid && submitted}
                 error={form.to.error}
@@ -197,7 +206,7 @@ const EperienceCard = () => {
                         </div>
                     </div>
                 }>
-                <span>{exp.from} - {exp.to}</span>
+                <span>{exp.from} - {exp.to || 'Present'}</span>
                  <h6>At {exp.company}</h6>
                 <p>{exp.description}</p>
                 </ACard>

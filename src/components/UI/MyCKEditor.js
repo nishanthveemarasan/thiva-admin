@@ -22,7 +22,8 @@ const MyCKEditor = ({
   onChange,
   placeholder = 'Start typing...',
   disabled = false,
-  height = '100px'
+  height = '100px',
+  type=''
 }) => {
   return (
     <div  style={{
@@ -60,7 +61,7 @@ const MyCKEditor = ({
         }}
         onChange={(event, editor) => {
           const data = editor.getData()
-          onChange && onChange(data)
+          onChange && onChange(data, type)
         }}
       />
 

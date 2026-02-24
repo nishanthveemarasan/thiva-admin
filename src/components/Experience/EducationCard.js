@@ -58,6 +58,7 @@ const EducationCard = () => {
         form[name].validators.forEach((validator) => {
           isValid = isValid && validator(value);
         });
+        if(name == "to" && value == "") isValid = true
         setForm({
           ...form,
           [name]: {
@@ -72,14 +73,15 @@ const EducationCard = () => {
         setSubmitted(true);
         let isFormValid = true;
         for (const key in form) {
+            if(key === "to" && form[key].value === "") continue;
           form[key].validators.forEach((validator) => {
             isFormValid = isFormValid && validator(form[key].value);
           });
         }
         if (isFormValid) {
             const formData = {
-                from: form.from.value,
-                to: form.to.value,
+                from: +form.from.value,
+                to: form.to.value ? +form.to.value : "",
                 course: form.course.value.trim(),
                 institution: form.institution.value.trim(),
                 description: form.description.value.trim(),
@@ -115,14 +117,20 @@ const EducationCard = () => {
         })
         setSubmitted(false);
     }
-    console.log(form);
+    const onSubmitHandler = () => {
+        // console.log(experience);
+    }
     return <>
+    <div className="d-flex justify-content-end">
+        <AButton click={onSubmitHandler} btnLabel={<>
+            <span className="me-2">Save</span>
+          </>} />
+      </div>
       <div className="border rounded p-3 mb-4 col-12 col-md-6">
         <div className="row">
             <FormInputItem
                 autoComplete="start-year"
                 value={form.from.value}
-                type="number"
                 change={onChangeHandler}
                 valid={!form.from.valid && submitted}
                 error={form.from.error}
@@ -133,7 +141,6 @@ const EducationCard = () => {
             <FormInputItem
                 autoComplete="end-year"
                 value={form.to.value}
-                type="number"
                 change={onChangeHandler}
                 valid={!form.to.valid && submitted}
                 error={form.to.error}

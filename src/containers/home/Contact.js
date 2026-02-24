@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { email, required } from "../../components/Helper/Validator";
 import FormInputItem from "../../components/UI/FormInputItem";
+import AButton from "../../components/UI/AButton";
+import ASpinner from "../../components/UI/ASpinner";
+import AErrors from "../../components/UI/AErrors";
 
 const Contact = () => {
+  const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const[submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     phone: {
       value: "",
@@ -39,8 +45,40 @@ const Contact = () => {
     });
   };
 
+  const onSubmitHandler = () => {
+    setSubmitted(true);
+    setErrors([]);
+
+    let isFormValid = true;
+    for (const key in form) {
+      let isValid = true;
+      form[key].validators.forEach((validator) => {
+        isValid = isValid && validator(form[key].value);
+      });
+      if(!isValid){
+        setErrors((prevErrors) => [...prevErrors, form[key].error]);
+      }
+      isFormValid = isFormValid && isValid;
+    }
+    if (isFormValid) {
+      setErrors([]);
+      let formData = {
+        phone: form.phone.value.trim(),
+        email: form.email.value.trim(),
+        address: form.address.value.trim(),
+      }
+      console.log(formData);
+    }
+  };
+
   return (
     <>
+      <div className="d-flex justify-content-end">
+        <AButton click={onSubmitHandler} btnLabel={<>
+            <span className="me-2">Save</span>
+          </>} />
+      </div>
+      {errors.length > 0 &&<AErrors errors={errors} />}
       <div className="mb-4">
         <div className="row">
           <FormInputItem
@@ -48,8 +86,6 @@ const Contact = () => {
             type="text"
             value={form.phone.value}
             change={onChangeHandler}
-            valid={form.phone.valid}
-            error={form.phone.error}
             input="phone"
             formLable={"Phone Number"}
             className="col-12 col-md-6"
@@ -61,8 +97,6 @@ const Contact = () => {
             type="email"
             value={form.email.value}
             change={onChangeHandler}
-            valid={form.email.valid}
-            error={form.email.error}
             input="email" 
             formLable={"Email Address"}
             className="col-12 col-md-6"
@@ -74,11 +108,9 @@ const Contact = () => {
             type="text"
             value={form.address.value}
             change={onChangeHandler}
-            valid={form.address.valid}
-            error={form.address.error}
             input="address" 
             formLable={"Address"}
-            className="col-12"
+            className="col-12 col-md-6"
           />  
         </div>
       </div>
