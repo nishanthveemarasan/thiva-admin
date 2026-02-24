@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MyCKEditor from "../../components/UI/MyCKEditor";
-import { required } from "../../components/Helper/Validator";
+import { image, required } from "../../components/Helper/Validator";
 import FormFileItem from "../../components/UI/FormFileItem";
 import CIcon from "@coreui/icons-react";
 import { cilArrowCircleBottom, cilArrowCircleTop, cilTrash } from "@coreui/icons";
@@ -26,7 +26,7 @@ const Header = () => {
       value: "",
       valid: false,
       src: "",
-      validators: [required],
+      validators: [image],
     },
   });
   console.log(content);
