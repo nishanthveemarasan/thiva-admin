@@ -30,22 +30,10 @@ const _nav = [
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
   },
   {
-    component: CNavGroup,
-    name: 'About Us Page',
-    to: '/about',
+    component: CNavItem,
+    name: 'Experience And Education',
+    to: '/my/experience',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'About Me',
-        to: '/about/me',
-      },
-      {
-        component: CNavItem,
-        name: 'Experience And Education',
-        to: '/about/experience',
-      },
-    ]
   },
   {
     component: CNavGroup,

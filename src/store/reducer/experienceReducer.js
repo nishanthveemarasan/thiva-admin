@@ -36,7 +36,6 @@ export const updateExperience = (data, uuid) => {
                 
             }
         }else{
-            // dispatch(authStoreActions.loginResponse({name: "", content: "Something went wrong! Please try again later!", success: false}));
         }
 
     }
@@ -55,7 +54,6 @@ export const deleteExperience = (uuid) => {
                 
             }
         }else{
-            // dispatch(authStoreActions.loginResponse({name: "", content: "Something went wrong! Please try again later!", success: false}));
         }
 
     }

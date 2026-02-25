@@ -67,6 +67,7 @@ const EperienceCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+        if(experience.length > 0) return; 
         const response = await HTTP.request("GET", "user/experience", null, {
                 setLoading: isLoading,
                 isAuthenticated: true,
@@ -82,7 +83,6 @@ const EperienceCard = () => {
     fetchData();
   }, []);
 
-  console.log(experience);
   const onChangeHandler = (value, name) => {
     let isValid = true;
     form[name].validators.forEach((validator) => {
@@ -125,8 +125,8 @@ const EperienceCard = () => {
     }
   };
 
-  const onDeleteExperienceHandler = (index) => {
-    dispatch(deleteExperience(experience[index].uuid));
+  const onDeleteExperienceHandler = (uuid) => {
+    dispatch(deleteExperience(uuid));
   };
 
   const onMoveExperienceHandler = (index, direction) => {
@@ -231,7 +231,7 @@ const EperienceCard = () => {
                       <AIcon
                         icon={cilTrash}
                         className="me-2"
-                        click={() => onDeleteExperienceHandler(index)}
+                        click={() => onDeleteExperienceHandler(exp.uuid)}
                       />
                       <AIcon
                         icon={cilPencil}

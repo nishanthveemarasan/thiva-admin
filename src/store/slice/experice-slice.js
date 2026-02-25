@@ -1,17 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { updateSkill } from "../reducer/skillReducer";
 
 const initialState = {
   experience: [],
-    education:[
-        {
-            "from": 2028,
-            "to": 2032,
-            "course": "fdgd",
-            "institution": "cvb",
-            "description": "cvbvc"
-        }
-    ],
-    skills:['add', 'deduct'],
+    education:[],
+    skills:[],
+    actionSkills:[],
     selectedExperience: null,
      selectedEducation: null
 };
@@ -28,6 +22,9 @@ const experienceSlice = createSlice({
         },
         setExperience: (state, action) => {
             state.experience = action.payload;
+        },
+        setEducation: (state, action) => {
+            state.education = action.payload;
         },
         addExperience: (state, action) => {
             state.experience.push(action.payload);
@@ -55,14 +52,15 @@ const experienceSlice = createSlice({
             [state.experience[index], state.experience[newIndex]] =
                 [state.experience[newIndex], state.experience[index]];  
         },
-            addEducation: (state, action) => {
+        addEducation: (state, action) => {
             state.education.push(action.payload);
         },
         removeEducation: (state, action) => {
-            state.education = state.education.filter((edu, index) => index !== action.payload);
+            state.education = state.education.filter((edu, index) => edu.uuid !== action.payload);
         },
         updateEducation: (state, action) => {
-            const { index, education } = action.payload;
+            const education = action.payload;
+            const index = state.education.findIndex((edu) => edu.uuid === education.uuid);
             if (index >= 0 && index < state.education.length) {
                 state.education[index] = education;
             }
@@ -80,12 +78,26 @@ const experienceSlice = createSlice({
             [state.education[index], state.education[newIndex]] =
                 [state.education[newIndex], state.education[index]];  
         },
-            addSkill: (state, action) => {
+        setSkills: (state, action) => {
+            state.skills = action.payload;
+        },
+        addSkill: (state, action) => {
             state.skills.push(action.payload);
+            state.actionSkills.push(action.payload);
         },
         removeSkill: (state, action) => {
-            state.skills = state.skills.filter((skill, index) => index !== action.payload);
+            let skill = state.skills.find((skill) => skill.name === action.payload);
+            let actionSkill = state.actionSkills.find((skill) => skill.name === action.payload);
+            if(actionSkill){
+                state.actionSkills = state.actionSkills.filter((skill) => skill.name !== action.payload);
+            }else{
+                state.actionSkills.push({name:action.payload, action:'delete', uuid: skill.uuid});
+            }
+            state.skills = state.skills.filter((skill, index) => skill.name !== action.payload);
         },
+        updateSkill: (state, action) => {
+            state.actionSkills = [];
+        }
 
     },
 })
