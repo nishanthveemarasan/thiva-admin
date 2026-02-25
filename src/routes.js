@@ -56,6 +56,7 @@ const WContact = React.lazy(() => import('./containers/home/Contact'))
 const WAboutMe = React.lazy(() => import('./containers/home/AboutMe'))
 const WExperience = React.lazy(() => import('./containers/home/Experience'))
 const WMyServices = React.lazy(() => import('./containers/services/MyServices'))
+const WFeaturedProjects = React.lazy(() => import('./containers/FeaturedProjects'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/home-page', name: 'Home Page', exact: true },
@@ -66,6 +67,7 @@ const routes = [
   { path: '/services', name: 'My Services', exact: true },
   { path: '/services/list', name: 'List', element: WMyServices },
   { path: '/about/experience', name: 'Experience And Education', element: WExperience },
+  { path: '/featured-project', name: 'Featured Projects', element: WFeaturedProjects },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
