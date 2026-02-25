@@ -17,30 +17,34 @@ export default class HTTP {
         url,
         headers: { ...options.headers },
       };
-  
+      if (options.setLoading) options.setLoading(true);
       if (data) config.data = data;
   
-      if (options.isAdmin) {
-        const token = localStorage.getItem("token");
+      if (options.isAuthenticated) {
+        const token = localStorage.getItem("ax_7689832T");
         config.headers["Authorization"] = `Bearer ${token}`;
       } 
-      
-      const { signature, timestamp } = this.#constructSignature(url, method.toUpperCase());
-      config.headers["X-Signature"] = signature;
-      config.headers["X-Timestamp"] = timestamp;
+      if(!options?.isAuthenticated){
+        const { signature, timestamp } = this.#constructSignature(url, method.toUpperCase());
+        config.headers["X-Signature"] = signature;
+        config.headers["X-Timestamp"] = timestamp;
+      }
   
-
       const response = await API(config);
+      
       return {error: false, result:response.data}; 
   
     } catch (error) {
       const errors = this.handleError(error);
       
       return {error: true, errors}; 
+    }finally{
+      if (options.setLoading) options.setLoading(false);
     }
   };
 
   static handleError = (error) => {
+    console.log(error.response);
     let errors = [];
     const message = error.response?.data?.message || "An unexpected error occurred";
     console.error(`[API Error]: ${message}`, error.response?.status);

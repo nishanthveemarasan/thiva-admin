@@ -59,9 +59,8 @@ const WMyServices = React.lazy(() => import('./containers/services/MyServices'))
 const WFeaturedProjects = React.lazy(() => import('./containers/FeaturedProjects'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/home-page', name: 'Home Page', exact: true },
-  { path: '/home-page/header', name: 'Header', element: WHeader },
-  { path: '/home-page/contact', name: 'Header', element: WContact },
+  { path: '/home-page', name: 'Home Page', element: WHeader },
+  { path: '/my-profile', name: 'My Profile', element:WAboutMe},
   { path: '/about', name: 'About Page', exact: true },
   { path: '/about/me', name: 'About Me', element: WAboutMe },
   { path: '/services', name: 'My Services', exact: true },

@@ -1,15 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  experience: [
-        {
-            "from": 2028,
-            "to": 2032,
-            "role": "fdgd",
-            "company": "cvb",
-            "description": "cvbvc"
-        }
-    ],
+  experience: [],
     education:[
         {
             "from": 2028,
@@ -19,21 +11,33 @@ const initialState = {
             "description": "cvbvc"
         }
     ],
-    skills:['add', 'deduct']
+    skills:['add', 'deduct'],
+    selectedExperience: null,
+     selectedEducation: null
 };
 
 const experienceSlice = createSlice({
     name: "experience",
     initialState,
     reducers: {
+        selectedExperience: (state, action) => {
+            state.selectedExperience = action.payload;
+        },
+         selectedEducation: (state, action) => {
+            state.selectedEducation = action.payload;
+        },
+        setExperience: (state, action) => {
+            state.experience = action.payload;
+        },
         addExperience: (state, action) => {
             state.experience.push(action.payload);
         },
         removeExperience: (state, action) => {
-            state.experience = state.experience.filter((exp, index) => index !== action.payload);
+            state.experience = state.experience.filter((exp, index) => exp.uuid !== action.payload);
         },
         updateExperience: (state, action) => {
-            const { index, experience } = action.payload;
+            const experience = action.payload;
+            const index = state.experience.findIndex((exp) => exp.uuid === experience.uuid);
             if (index >= 0 && index < state.experience.length) {
                 state.experience[index] = experience;
             }

@@ -1,61 +1,100 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MyCKEditor from "../../components/UI/MyCKEditor";
 import { email, image, required } from "../../components/Helper/Validator";
 import FormFileItem from "../../components/UI/FormFileItem";
 import AButton from "../../components/UI/AButton";
 import FormInputItem from "../../components/UI/FormInputItem";
+import HTTP from "../../components/Axios/api";
+import AErrors from "../../components/UI/AErrors";
+import ASpinner from "../../components/UI/ASpinner";
 const AboutMe = () => {
-  const [form, setForm] = useState({
-    first_name: {
-      value: "",
-      error: "First Name is required",
-      valid: false,
-      validators: [required],
-    },
-    last_name: {
-      value: "",
-      error: "Last Name is required",
-      valid: false,
-      validators: [required],
-    },
-    phone: {
-      value: "",
-      error: "Phone number is required",
-      valid: false,
-      validators: [required],
-    },
-    email: {
-      value: "",
-      error: "Email Address is required",
-      valid: false,
-      validators: [required, email],
-    },
-    address: {
-      value: "",
-      valid: false,
-      error: "Address is required",
-      validators: [required],
-    },
-    bottom_line: {
-      value: "",
-      error: "Bottom Line is required",
-      valid: false,
-      validators: [required],
-    },
-    biography: {
-      value: "",
-      error: "Description is required",
-      valid: false,
-      validators: [required],
-    },
-    image: {
-      value: "",
-      valid: false,
-      src: "",
-      validators: [image],
-      error: "Image is required",
-    },
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [uuid, setUuid] = useState('');
+ const [errors, setErrors] = useState([]);
+ const [form, setForm] = useState({
+   first_name: {
+     value: "",
+     error: "First Name is required",
+     valid: false,
+     validators: [required],
+   },
+   last_name: {
+     value: "",
+     error: "Last Name is required",
+     valid: false,
+     validators: [required],
+   },
+   phone: {
+     value: "",
+     error: "Phone number is required",
+     valid: false,
+     validators: [required],
+   },
+   email: {
+     value: "",
+     error: "Email Address is required",
+     valid: false,
+     validators: [required, email],
+   },
+   address: {
+     value: "",
+     valid: false,
+     error: "Address is required",
+     validators: [required],
+   },
+   bottom_line: {
+     value: "",
+     error: "Bottom Line is required",
+     valid: false,
+     validators: [required],
+   },
+   biography: {
+     value: "",
+     error: "Description is required",
+     valid: false,
+     validators: [required],
+   },
+   image: {
+     value: "",
+     valid: false,
+     src: "",
+     validators: [image],
+     error: "Image is required",
+   },
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      // Pass setLoading in the options object
+      const response = await HTTP.request("GET", "user/profile-info", null, {
+        setLoading: isLoading,
+        isAuthenticated: true,
+      });
+  
+      if (!response.error) {
+        const { result } = response;
+        if(result.data && result.data.uuid){
+          const profileInfo = result.data;
+          setUuid(profileInfo.uuid);
+          setForm(prevState => {
+            const updatedForm = { ...prevState };
+            for (const key in updatedForm) {
+              if (profileInfo[key]) {
+                updatedForm[key] = {
+                  ...updatedForm[key],
+                  value: key === "image" ? "" : profileInfo[key],
+                  valid: true,
+                  src: key === "image" ? profileInfo[key].full_url : null,
+                };
+              }
+            }
+            return updatedForm;
+          });
+        }
+      }
+    };
+    fetchData();
+  }, []);
 
   const onChangeHandler = (value, name) => {
     let isValid = true;
@@ -73,25 +112,52 @@ const AboutMe = () => {
     });
   };
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = async() => {
+    setErrors([])
+    
+    ;
     let isFormValid = true;
     for (const key in form) {
+      let isValid = true;
       form[key].validators.forEach((validator) => {
-        isFormValid = isFormValid && validator(form[key].value);
+        if(key === "image" && form[key].value === "" && uuid ){
+          return;
+        }
+        isValid = isValid && validator(form[key].value);
       });
+      if(!isValid){
+        setErrors((prevErrors) => [...prevErrors, form[key].error]);
+      }
+      isFormValid = isFormValid && isValid;
     }
     if (isFormValid) {
-      const formData = {
-        first_name: form.first_name.value.trim(),
-        last_name: form.last_name.value.trim(),
-        phone: form.phone.value.trim(),
-        email: form.email.value.trim(),
-        address: form.address.value.trim(),
-        bottom_line: form.bottom_line.value.trim(),
-        biography: form.biography.value.trim(),
-        image: form.image.value,
-      };
-      console.log(formData);
+      setErrors([]);
+      let formData = new FormData();
+      for (const key in form) {
+        if(key === "image" && form[key].value === "" && uuid ){
+          continue;
+        }
+        formData.append(key, form[key].value);
+      }
+      if (uuid) {
+        formData.append('uuid', uuid);
+      }
+      setIsSending(true);
+      const response = await HTTP.request("POST", "user/profile-info", formData, {
+        setLoading: isLoading,
+        isAuthenticated: true,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+  
+      if (!response.error) {
+        const { result } = response;
+        if(result.data){
+          setUuid(result.data.uuid);
+        }
+      }
+      
     }
   };
 
@@ -107,6 +173,7 @@ const AboutMe = () => {
           }
         />
       </div>
+      {errors.length > 0 &&<AErrors errors={errors} />}
       <div className="mb-4">
         <div className="row">
           <FormInputItem
