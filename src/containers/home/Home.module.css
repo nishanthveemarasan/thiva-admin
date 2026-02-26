@@ -6,3 +6,15 @@
 .inputWidth {
   width: 300px;
 }
+
+.tableHeading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding:20px 0;
+  font-size: 0.7rem;
+  border-radius: 5px;
+  background-color: rgb(200, 200, 200);
+  font-weight: bold;
+  margin-top: 20%;
+}

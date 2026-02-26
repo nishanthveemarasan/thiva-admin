@@ -22,6 +22,24 @@ export const getList = (isLoading, page=1) => {
     }
 }
 
+export const getService = (uuid, setLoading) => {
+  return async (dispatch) => {
+    const response = await HTTP.request("GET", `user/service/${uuid}`, null, {
+      isAuthenticated: true,
+      setLoading,
+    });
+    if (!response.error) {
+      const { result } = response;
+      console.log(result);
+      if (result.success) {
+        dispatch(serviceStoreActions.setSelectedService(result.data));
+      } else {
+      }
+    } else {
+    }
+  };
+};
+
 export const updateService = (data, navigate, uuid = null) => {
   return async (dispatch) => {
     let method = uuid ? "PATCH" : "POST";
@@ -53,7 +71,7 @@ export const deleteService = (uuid, navigate) => {
     if (!response.error) {
       const { result } = response;
       if (result.success) {
-        navigate(0);
+        dispatch(serviceStoreActions.updateRefresh());
       } else {
       }
     } else {

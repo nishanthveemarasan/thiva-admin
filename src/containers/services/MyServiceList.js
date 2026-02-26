@@ -7,29 +7,32 @@ import ServiceListTable from "../../components/MyServices/ServiceListTable";
 import ARouteButton from "../../components/UI/ARouteButton";
 import { useNavigate } from "react-router-dom";
 import { serviceStoreActions } from "../../store/store";
+import classes from "../home/Home.module.css";
 
 const MyServiceList = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(getList(setIsLoading));
-  }, []);
-
   const mapStateToProps = createSelector(
-    [(state) => state.serviceStore.services],
-    (services) => ({
-      services,
+    [
+      (state) => state.serviceStore.services,
+      (state) => state.serviceStore.refresh,
+    ],
+    (services, refresh) => ({
+      services,refresh
     })
   );
+  const { services, refresh } = useSelector(mapStateToProps);
+  useEffect(() => {
+    dispatch(getList(setIsLoading));
+  }, [refresh]);
+
 
   const onPageChangeHander = (page) => {
     if (page === null) return;
-    console.log(page);
-    // dispatch(getList(setIsLoading, page));
+    dispatch(getList(setIsLoading, page));
   };
 
-  const { services } = useSelector(mapStateToProps);
   let content = (
     <div className="ad-page-spinner">
       <CSpinner color="danger" />
@@ -44,7 +47,7 @@ const MyServiceList = () => {
           onChange={onPageChangeHander}
           edit={(row) => {
             dispatch(serviceStoreActions.setSelectedService(row));
-            navigate("/services/create");
+            navigate(`/services/update/${row.uuid}`);
           }}
           remove={(uuid) => dispatch(deleteService(uuid, navigate))}
         />

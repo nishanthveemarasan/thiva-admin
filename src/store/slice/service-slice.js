@@ -1,14 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { IconRefresh } from "ckeditor5";
 
 const initialState = {
     services: [],
-    selectedService: null
+    selectedService: null,
+    IconRefresh 
 }
 
 const serviceSlice = createSlice({
     name: "service",
     initialState,
     reducers: {
+        updateRefresh: (state) => {
+            state.refresh = !state.refresh;
+        },
         setServices: (state, action) => {
             state.services = action.payload;
         },

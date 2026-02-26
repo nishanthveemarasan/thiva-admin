@@ -7,12 +7,13 @@ import AIcon from "../UI/AIcon";
 import { cilPlus, cilTrash } from "@coreui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { serviceStoreActions } from "../../store/store";
-import { useNavigate } from "react-router-dom";
-import { updateService } from "../../store/reducer/serviceReducer";
+import { useNavigate, useParams } from "react-router-dom";
+import { getService, updateService } from "../../store/reducer/serviceReducer";
 import { createSelector } from "@reduxjs/toolkit";
 const ServiceForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {uuid} = useParams();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     title: {
@@ -48,9 +49,12 @@ const ServiceForm = () => {
     })
   );
   const { selectedService } = useSelector(mapStateToProps);
-
+const[isFetched, setIsFetched] = useState(false);
   useEffect(() => {
-    if (selectedService) {
+    if (uuid && !selectedService) {
+      console.log("fetching");  
+      dispatch(getService(uuid, setIsFetched));
+    }else{
       updateForm(selectedService);
     }
   }, [selectedService]);
@@ -122,11 +126,8 @@ const ServiceForm = () => {
         points: form.points.value,
         special_point: form.special_point.value,
       };
-      if(!selectedService){
-      dispatch(updateService(formData, navigate));
-      }else{
-        dispatch(updateService(formData, navigate, selectedService.uuid));
-      }
+      dispatch(updateService(formData, navigate, selectedService?.uuid));
+     
       updateForm();
     }
   };
@@ -138,7 +139,7 @@ const ServiceForm = () => {
             copyObject[key] = {
                 ...prevState[key],
                 value: obj ? obj[key] : (Array.isArray(copyObject[key].value) ? [] : ""),
-                valid: obj ? true : false,
+                valid: !!obj ,
             }
         }
         return copyObject;

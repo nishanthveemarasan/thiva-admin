@@ -1,6 +1,6 @@
 import { CButton, CFormInput, CFormLabel, CInputGroup } from "@coreui/react";
 
-const FormFileItem = ({btnLabel, imgId="selectImageFile", change}) => {
+const FormFileItem = ({btnLabel, imgId="selectImageFile", change, valid=true, error=null}) => {
     const uploadImageHandler = () => {
         const fileInput = document.getElementById(imgId);
         fileInput.click();
@@ -15,6 +15,7 @@ const FormFileItem = ({btnLabel, imgId="selectImageFile", change}) => {
 
   return (
     <div className="mb-3">
+        {valid && error && <div className="text-danger mb-2">{error}</div>}
         <CButton color="success" onClick={uploadImageHandler}>
               {btnLabel}
         </CButton>
