@@ -1,28 +1,11 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import ServiceForm from "../../components/services/ServiceForm";
-import AIcon from "../../components/UI/AIcon";
-import { cilTrash } from "@coreui/icons";
-import { serviceStoreActions } from "../../store/store";
-import ACard from "../../components/UI/ACard";
 
-const MyServices = () => {
-  const mapStateToProps = createSelector(
-    [(state) => state.serviceStore.services],
-    (services) => ({
-      services,
-    })
-  );
-  const { services } = useSelector(mapStateToProps);
-  const dispatch = useDispatch();
-  const onDeleteServiceHandler = (index) => {
-    dispatch(serviceStoreActions.removeService(index));
-  };
-
+const CreateService = () => {
   return (
     <>
       <ServiceForm />
-      {services.length > 0 &&
+      {/* {services.length > 0 &&
         services.map((service, index) => (
           <div key={index} className="p-3 mb-1 col-12 col-md-6">
             <ACard
@@ -55,8 +38,8 @@ const MyServices = () => {
              </div>
             </ACard>
           </div>
-        ))}
+        ))} */}
     </>
   );
 };
-export default MyServices;
+export default CreateService;

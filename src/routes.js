@@ -55,15 +55,16 @@ const WHeader = React.lazy(() => import('./containers/home/Header'))
 const WContact = React.lazy(() => import('./containers/home/Contact'))
 const WAboutMe = React.lazy(() => import('./containers/home/AboutMe'))
 const WExperience = React.lazy(() => import('./containers/home/Experience'))
-const WMyServices = React.lazy(() => import('./containers/services/MyServices'))
+const WCreateService = React.lazy(() => import('./containers/services/CreateService'))
 const WFeaturedProjects = React.lazy(() => import('./containers/FeaturedProjects'))
+const WMyServiceList = React.lazy(() => import('./containers/services/MyServiceList'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/home-page', name: 'Home Page', element: WHeader },
   { path: '/my-profile', name: 'My Profile', element:WAboutMe},
   { path: '/my/experience', name: 'Experience And Education', element:WExperience},
-  { path: '/services', name: 'My Services', exact: true },
-  { path: '/services/list', name: 'List', element: WMyServices },
+  { path: '/my/services', name: 'My Services', element:WMyServiceList},
+  { path: '/services/create', name: 'Create / Update Service', element: WCreateService },
   { path: '/about/experience', name: 'Experience And Education', element: WExperience },
   { path: '/featured-project', name: 'Featured Projects', element: WFeaturedProjects },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },

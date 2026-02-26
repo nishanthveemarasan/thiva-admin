@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { required } from "../Helper/Validator";
 import FormInputItem from "../UI/FormInputItem";
 import FormTextArea from "../UI/FormTextArea";
 import AButton from "../UI/AButton";
 import AIcon from "../UI/AIcon";
 import { cilPlus, cilTrash } from "@coreui/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { serviceStoreActions } from "../../store/store";
+import { useNavigate } from "react-router-dom";
+import { updateService } from "../../store/reducer/serviceReducer";
+import { createSelector } from "@reduxjs/toolkit";
 const ServiceForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     title: {
@@ -36,6 +40,20 @@ const ServiceForm = () => {
       validators: [required],
     },
   });
+
+  const mapStateToProps = createSelector(
+    [(state) => state.serviceStore.selectedService],
+    (selectedService) => ({
+      selectedService,
+    })
+  );
+  const { selectedService } = useSelector(mapStateToProps);
+
+  useEffect(() => {
+    if (selectedService) {
+      updateForm(selectedService);
+    }
+  }, [selectedService]);
 
   const onChangeHandler = (value, name) => {
     let isValid = true;
@@ -104,8 +122,11 @@ const ServiceForm = () => {
         points: form.points.value,
         special_point: form.special_point.value,
       };
-      console.log(formData);
-      dispatch(serviceStoreActions.addService(formData));
+      if(!selectedService){
+      dispatch(updateService(formData, navigate));
+      }else{
+        dispatch(updateService(formData, navigate, selectedService.uuid));
+      }
       updateForm();
     }
   };
@@ -199,7 +220,7 @@ const ServiceForm = () => {
           />
         </div>
       </div>
-      <AButton block={true} btnLabel={"Add Service"} click={onAddServiceHandler}/>
+      <AButton block={true} btnLabel={selectedService ? "Update Service" :"Add Service"} click={onAddServiceHandler}/>
     </div>
   );
 };

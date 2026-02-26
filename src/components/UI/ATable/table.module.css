@@ -1,0 +1,41 @@
+.tableHead{
+    font-size: 11px;
+    text-align: center;
+}
+
+.tableBody{
+    font-size: 9.5px;
+}
+
+@media only screen and (min-width: 768px) {
+    .tableHead{
+        font-size: 14px;
+        text-align: center;
+    }
+    
+    .tableBody{
+        font-size: 13px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .tableHead{
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    .tableBody{
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .tableHead{
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .tableBody{
+        font-size: 17px;
+    }
+}

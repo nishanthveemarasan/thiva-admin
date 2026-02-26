@@ -69,3 +69,10 @@ body {
 .my-ck-editor .ck-editor__editable_inline {
   min-height: var(--editor-height);
 }
+
+.ad-page-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: red;
+}
