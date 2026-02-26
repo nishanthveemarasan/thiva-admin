@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MyCKEditor from "../../components/UI/MyCKEditor";
 import { image, required } from "../../components/Helper/Validator";
 import FormFileItem from "../../components/UI/FormFileItem";
@@ -12,12 +12,17 @@ import AIcon from "../../components/UI/AIcon";
 import FormInputItem from "../../components/UI/FormInputItem";
 import classes from "./Home.module.css";
 import AButton from "../../components/UI/AButton";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getContent, updateContent } from "../../store/reducer/homeReducer";
+import { createSelector } from "@reduxjs/toolkit";
+import AErrors from "../../components/UI/AErrors";
 const Header = () => {
-  const [content, setContent] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState([]);
   const [images, setImages] = useState([]);
   const [form, setForm] = useState({
-    heading: {
+    title: {
       value: "",
       error: "Heading is required",
       valid: false,
@@ -32,25 +37,64 @@ const Header = () => {
     image: {
       value: "",
       valid: false,
-      src: "",
+      src: "At least one image is required",
       validators: [image],
     },
   });
-  console.log(content);
+  const mapStateToProps = createSelector(
+    (state) => state.homeStore.content,
+    (content) => ({ content })
+  );
+  const { content } = useSelector(mapStateToProps);
+  const dispatch = useDispatch();
+  const loaded = useRef(false);
+  useEffect(() => {
+    if (!loaded.current) {
+      dispatch(getContent(setIsLoading));
+      loaded.current = true;
+    }
+    if (content) {
+      setForm((prevState) => {
+        const updatedForm = { ...prevState };
+        for (const key in content) {
+          if (updatedForm[key]) {
+            updatedForm[key] = {
+              ...updatedForm[key],
+              value: content[key],
+              valid: true,
+            };
+          }
+        }
+        return updatedForm;
+      });
+      if (content.images) {
+        setImages(
+          content.images.map((img) => ({
+            src: img.full_url,
+            title: img.title,
+            value: null,
+            uuid: img.uuid,
+          }))
+        );
+      }
+    }
+  }, [content]);
 
   const onChangeHandler = (value, name) => {
     let isValid = true;
     form[name].validators.forEach((validator) => {
       isValid = isValid && validator(value);
     });
-    setForm({
-      ...form,
-      [name]: {
-        ...form[name],
+    setForm((prevState) => {
+      let copyState = { ...prevState };
+      copyState[name] = {
+        ...prevState[name],
         value,
         valid: isValid,
-      },
+      };
+      return copyState;
     });
+
     if (name === "image") {
       setImages([
         ...images,
@@ -92,47 +136,63 @@ const Header = () => {
 
   const onSubmitHandler = () => {
     let isFormValid = true;
+    setErrors([]);
     for (const key in form) {
+      let valid = true;
       form[key].validators.forEach((validator) => {
-        isFormValid = isFormValid && validator(form[key].value);
-      }
-      );
-    }
-      if (isFormValid) {
-        const formData = new FormData();
-        for (const key in form) {
-          formData.append(key, form[key].value);
+        if (
+          key === "image" &&
+          form[key].value === "" &&
+          content?.title
+        ) {
+          return;
         }
-        images.forEach((img, index) => {
-          formData.append(`image[${index}][file]`, img.value);
-          formData.append(`image[${index}][title]`, img.title);
-          formData.append(`image[${index}][action]`, 'add');
-        });
-
-      //   images.forEach((img, index) => {
-      //     // If the image is being deleted, we only need the action and the uuid
-      //     if (img.action === 'delete') {
-      //         formData.append(`image[${index}][action]`, 'delete');
-      //         formData.append(`image[${index}][uuid]`, img.uuid);
-      //     } else {
-      //         // Otherwise, it's an 'add' or 'update'
-      //         formData.append(`image[${index}][file]`, img.value); // The actual File object
-      //         formData.append(`image[${index}][title]`, img.title);
-      //         formData.append(`image[${index}][action]`, img.action || 'add');
-              
-      //         if (img.uuid) {
-      //             formData.append(`image[${index}][uuid]`, img.uuid);
-      //         }
-      //     }
-      // });
-        console.log(formData);
+        valid = validator(form[key].value);
+      });
+      if (!valid) {
+        setErrors((prevErrors) => [...prevErrors, form[key].error]);
       }
-  }
+      isFormValid = isFormValid && valid;
+    }
+    if (isFormValid) {
+      const formData = new FormData();
+      for (const key in form) {
+        formData.append(key, form[key].value);
+      }
+      // images.forEach((img, index) => {
+      //   formData.append(`image[${index}][file]`, img.value);
+      //   formData.append(`image[${index}][title]`, img.title);
+      //   formData.append(`image[${index}][action]`, 'add');
+      // });
+
+      images.forEach((img, index) => {
+        if (img.action === "delete") {
+          formData.append(`images[${index}][action]`, "delete");
+          formData.append(`images[${index}][uuid]`, img.uuid);
+        } else {
+          if(img.value){
+            formData.append(`images[${index}][file]`, img.value);
+          }
+          formData.append(`images[${index}][title]`, img.title);
+          formData.append(
+            `images[${index}][action]`,
+            img?.uuid ? "update" : "add"
+          );
+
+          if (img.uuid) {
+            formData.append(`images[${index}][uuid]`, img.uuid);
+          }
+        }
+      });
+      dispatch(updateContent(formData, setIsSubmitting));
+    }
+  };
 
   return (
     <>
       <div className="d-flex justify-content-end">
         <AButton
+          disabled={isSubmitting}
           click={onSubmitHandler}
           btnLabel={
             <>
@@ -141,13 +201,14 @@ const Header = () => {
           }
         />
       </div>
+      {errors.length > 0 && <AErrors errors={errors}  />}
       <div className="mb-4">
         <div className="text-2xl font-bold mb-1">Header</div>
         <MyCKEditor
-          value={form.heading.value}
+          value={form.title.value}
           onChange={onChangeHandler}
           placeholder={"Header content"}
-          type="heading"
+          type="title"
         />
       </div>
       <div className="mb-4">

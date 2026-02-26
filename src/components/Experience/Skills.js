@@ -24,6 +24,7 @@ const Skills = () => {
   const dispatch = useDispatch();
   const [submitted, setSubmitted] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const[isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = React.useState({
     skill: {
       value: "",
@@ -86,7 +87,7 @@ const Skills = () => {
     dispatch(experienceStoreActions.removeSkill(name));
   };
   const onSubmitHandler = () => {
-    dispatch(updateSkill({skills:actionSkills}));
+    dispatch(updateSkill({skills:actionSkills}, setIsSubmitting));
     resetForm();
   };
 
@@ -111,6 +112,7 @@ const Skills = () => {
               <span className="me-2">Save</span>
             </>
           }
+          disabled={isSubmitting}
         />
       </div>
       <div className="border rounded p-3 mb-4 col-12 col-md-6">
@@ -145,7 +147,7 @@ const Skills = () => {
                   <ABadge badgeLabel={<AIcon icon={cilX} />} />
                 </div>
               }
-              className={"me-1"}
+              className={"me-1 mb-1"}
               click={() => onRemoveSkillHandler(skill.name)}
             />
           ))}

@@ -11,6 +11,7 @@ import {
   updateTestimonial,
 } from "../../store/reducer/testimonialReducer";
 import { CSpinner } from "@coreui/react";
+import { testimonialStoreActions } from "../../store/store";
 
 const CreateTestmonial = () => {
   const { uuid } = useParams();
@@ -62,22 +63,27 @@ const CreateTestmonial = () => {
   const { selectedTestimonial } = useSelector(mapStateToProps);
 
   useEffect(() => {
-    if (uuid && !selectedTestimonial) {
-      dispatch(getTestimonial(uuid, setIsFetched));
-    } else if (uuid && selectedTestimonial) {
-      setForm((prevState) => {
-        const updatedForm = { ...prevState };
-        for (const key in updatedForm) {
-          if (selectedTestimonial[key]) {
-            updatedForm[key] = {
-              ...updatedForm[key],
-              value: selectedTestimonial[key],
-              valid: true,
-            };
+    if (uuid) {
+      if (!selectedTestimonial) {
+        dispatch(getTestimonial(uuid, setIsFetched));
+      } else if (selectedTestimonial) {
+        setForm((prevState) => {
+          const updatedForm = { ...prevState };
+          for (const key in updatedForm) {
+            if (selectedTestimonial[key]) {
+              updatedForm[key] = {
+                ...updatedForm[key],
+                value: selectedTestimonial[key],
+                valid: true,
+              };
+            }
           }
-        }
-        return updatedForm;
-      });
+          return updatedForm;
+        });
+      }
+    }else{
+      dispatch(testimonialStoreActions.setSelectedTestimonial(null));
+      updatedForm();
     }
   }, [uuid, selectedTestimonial]);
   const onChangeHandler = (value, name) => {
@@ -85,15 +91,15 @@ const CreateTestmonial = () => {
     form[name].validators.forEach((validator) => {
       isValid = isValid && validator(value);
     });
-    setForm(prevState => {
-        let copyState = {...prevState};
-        copyState[name] = {
-            ...prevState[name],
-            value,
-            valid: isValid
-        }
-        return copyState;
-    })
+    setForm((prevState) => {
+      let copyState = { ...prevState };
+      copyState[name] = {
+        ...prevState[name],
+        value,
+        valid: isValid,
+      };
+      return copyState;
+    });
   };
 
   const onSubmitHandler = () => {
@@ -121,6 +127,20 @@ const CreateTestmonial = () => {
       )
     );
   };
+
+  const updatedForm = (obj = null) => {
+    setForm((prevState) => {
+      const updatedForm = { ...prevState };
+      for (const key in updatedForm) {
+          updatedForm[key] = {
+            ...updatedForm[key],
+            value: obj ? obj[key] : "",
+            valid: !!(obj && obj[key]),
+          };
+      }
+      return updatedForm;
+    });
+  }
 
   return (
     <div className="border rounded p-3 mb-4 col-12 col-md-6">

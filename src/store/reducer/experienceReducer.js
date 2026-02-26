@@ -2,10 +2,11 @@ import HTTP from "../../components/Axios/api";
 import { experienceStoreActions } from "../store";
 
 
-export const addExperience = (data) => {
+export const addExperience = (data, setLoading) => {
     return async (dispatch) => {
         const response = await HTTP.request("POST", "user/experience", data, {
-            isAuthenticated: true
+            isAuthenticated: true,
+            setLoading
         });
         if(!response.error ){
             const {result} = response;
@@ -22,10 +23,11 @@ export const addExperience = (data) => {
     }
 }
 
-export const updateExperience = (data, uuid) => {
+export const updateExperience = (data, uuid, setLoading) => {
     return async (dispatch) => {
         const response = await HTTP.request("PATCH", `user/experience/${uuid}`, data, {
-            isAuthenticated: true
+            isAuthenticated: true,
+            setLoading
         });
         if(!response.error ){
             const {result} = response;

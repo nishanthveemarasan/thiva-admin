@@ -101,15 +101,24 @@ const AboutMe = () => {
     form[name].validators.forEach((validator) => {
       isValid = isValid && validator(value);
     });
-    setForm({
-      ...form,
-      [name]: {
-        ...form[name],
+    setForm(prevState => {
+      const updatedForm = { ...prevState };
+      updatedForm[name] = {
+        ...updatedForm[name],
         value,
         valid: isValid,
         src: name === "image" ? URL.createObjectURL(value) : null,
-      },
+      };
+      return updatedForm;
     });
+    //   ...form,
+    //   [name]: {
+    //     ...form[name],
+    //     value,
+    //     valid: isValid,
+    //     src: name === "image" ? URL.createObjectURL(value) : null,
+    //   },
+    // });
   };
 
   const onSubmitHandler = async() => {

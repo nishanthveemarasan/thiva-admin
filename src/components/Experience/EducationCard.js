@@ -28,6 +28,7 @@ const EducationCard = () => {
   );
   const { education, selectedEducation } = useSelector(mapStateToProps);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
@@ -112,12 +113,8 @@ const EducationCard = () => {
         institution: form.institution.value.trim(),
         description: form.description.value.trim(),
       };
-      console.log(formData);
-      if(selectedEducation){
-        dispatch(updateEducation(formData, selectedEducation.uuid));
-      }else{
-          dispatch(updateEducation(formData));
-      }
+      dispatch(updateEducation(formData, selectedEducation?.uuid, setIsSubmitting));
+      
       updateForm();
     }
   };
@@ -214,6 +211,7 @@ const EducationCard = () => {
           block={true}
           btnLabel={selectedEducation ? "Update Education":"Add Education"}
           click={onAddEducationHandler}
+          disabled={isSubmitting}
         />
       </div>
       {education.length > 0 &&

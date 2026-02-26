@@ -29,6 +29,7 @@ const EperienceCard = () => {
   const { experience, selectedExperience } = useSelector(mapStateToProps);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     from: {
@@ -117,9 +118,9 @@ const EperienceCard = () => {
         description: form.description.value.trim(),
       };
       if(selectedExperience){
-        dispatch(updateExperience(formData, selectedExperience.uuid));
+        dispatch(updateExperience(formData, selectedExperience.uuid, setIsSubmitting));
       }else{
-          dispatch(addExperience(formData));
+          dispatch(addExperience(formData, setIsSubmitting));
       }
       updateForm();
     }
@@ -217,6 +218,7 @@ const EperienceCard = () => {
           block={true}
           btnLabel={selectedExperience ? "Update Experience" : "Add Experience"}
           click={onAddExperienceHandler}
+          disabled={isSubmitting}
         />
       </div>
       {experience.length > 0 &&

@@ -20,10 +20,16 @@ const CreateProject = () => {
   const[isFetched, setIsFetched] = useState(false);
   const { selectedProject } = useSelector(mapStateToProps);
   useEffect(() => {
-    if (uuid && !selectedProject ) {
-      dispatch(getProject(uuid, setIsFetched));
-    } else {
-      updateForm(selectedProject);
+    if(uuid){
+      if (!selectedProject ) {
+        dispatch(getProject(uuid, setIsFetched));
+      } else {
+        updateForm(selectedProject);
+      }
+
+    }else{
+      dispatch(projectStoreActions.setSelectedProject(null));
+      updateForm();
     }
   }, [uuid, selectedProject, setIsFetched]);
   const dispatch = useDispatch();

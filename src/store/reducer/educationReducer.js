@@ -2,12 +2,13 @@ import HTTP from "../../components/Axios/api";
 import { experienceStoreActions } from "../store";
 
 
-export const updateEducation = (data, uuid = null) => {
+export const updateEducation = (data, uuid = null, setLoading) => {
   return async (dispatch) => {
     let method = uuid? "PATCH":"POST";
     let url = uuid? `user/education/${uuid}`:"user/education";
     const response = await HTTP.request(method, url, data, {
       isAuthenticated: true,
+      setLoading,
     });
     if (!response.error) {
       const { result } = response;

@@ -51,11 +51,15 @@ const ServiceForm = () => {
   const { selectedService } = useSelector(mapStateToProps);
 const[isFetched, setIsFetched] = useState(false);
   useEffect(() => {
-    if (uuid && !selectedService) {
-      console.log("fetching");  
-      dispatch(getService(uuid, setIsFetched));
+    if(uuid){
+      if (!selectedService) {
+        dispatch(getService(uuid, setIsFetched));
+      }else if(selectedService && uuid){
+        dispatch(serviceStoreActions.setSelectedService(null));
+        updateForm(selectedService);
+      }
     }else{
-      updateForm(selectedService);
+      updateForm();
     }
   }, [selectedService]);
 
