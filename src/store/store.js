@@ -4,6 +4,7 @@ import authSlice from "./slice/auth-slice";
 import experienceSlice from "./slice/experice-slice";
 import serviceSlice from "./slice/service-slice";
 import projectSlice from "./slice/project-slice";
+import testimonialSlice from "./slice/testmonial-slice";
 
 const store = configureStore({
     reducer:{
@@ -11,7 +12,8 @@ const store = configureStore({
         authStore: authSlice.reducer,
         experienceStore: experienceSlice.reducer,
         serviceStore: serviceSlice.reducer,
-        projectStore: projectSlice.reducer
+        projectStore: projectSlice.reducer,
+        testimonialStore: testimonialSlice.reducer
     }
 
 })
@@ -21,4 +23,5 @@ export const authStoreActions = authSlice.actions;
 export const experienceStoreActions = experienceSlice.actions;
 export const serviceStoreActions = serviceSlice.actions;
 export const projectStoreActions = projectSlice.actions;
+export const testimonialStoreActions = testimonialSlice.actions;
 export default store;
