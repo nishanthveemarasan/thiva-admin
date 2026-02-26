@@ -30,7 +30,6 @@ export const getService = (uuid, setLoading) => {
     });
     if (!response.error) {
       const { result } = response;
-      console.log(result);
       if (result.success) {
         dispatch(serviceStoreActions.setSelectedService(result.data));
       } else {

@@ -15,7 +15,6 @@ export const getList = (isLoading, page = 1) => {
     if (!response.error) {
       const { result } = response;
       if (result.success) {
-        console.log(result.data);
         dispatch(testimonialStoreActions.setTestimonials(result.data));
       } else {
       }

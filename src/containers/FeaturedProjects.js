@@ -60,8 +60,7 @@ const FeaturedProjects = () => {
       for (const key in form) {
         formData.append(key, form[key].value);
       }
-      console.log(formData);
-    }
+     }
 }
   return (
     <>
