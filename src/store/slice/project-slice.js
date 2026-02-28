@@ -15,6 +15,7 @@ const projectSlice = createSlice({
         },
         setSProjects: (state, action) => {
             state.projects = action.payload;
+            state.selectedProject = null;
         },
         setSelectedProject: (state, action) => {
             state.selectedProject = action.payload;
