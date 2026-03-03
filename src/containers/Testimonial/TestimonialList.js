@@ -9,6 +9,7 @@ import {
 import { CSpinner } from "@coreui/react";
 import TestimonialListTable from "../../components/MyTestimonials/TestimonialListTable";
 import ARouteButton from "../../components/UI/ARouteButton";
+import classes from "../home/Home.module.css";
 
 const TestimonialList = () => {
   const [isLoading, setIsLoading] = useState(true);

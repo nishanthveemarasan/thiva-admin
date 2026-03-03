@@ -25,12 +25,24 @@ const AboutMe = () => {
      valid: false,
      validators: [required],
    },
-   phone: {
+   last_name: {
+    value: "",
+    error: "Last Name is required",
+    valid: false,
+    validators: [required],
+  },
+   qualification: {
      value: "",
-     error: "Phone number is required",
+     error: "Qualification is required",
      valid: false,
      validators: [required],
    },
+   phone: {
+    value: "",
+    error: "Phone number is required",
+    valid: false,
+    validators: [required],
+  },
    email: {
      value: "",
      error: "Email Address is required",
@@ -67,7 +79,7 @@ const AboutMe = () => {
     const fetchData = async () => {
       // Pass setLoading in the options object
       const response = await HTTP.request("GET", "user/profile-info", null, {
-        setLoading: isLoading,
+        setLoading: setIsLoading,
         isAuthenticated: true,
       });
   
@@ -153,7 +165,7 @@ const AboutMe = () => {
       }
       setIsSending(true);
       const response = await HTTP.request("POST", "user/profile-info", formData, {
-        setLoading: isLoading,
+        setLoading: setIsSending,
         isAuthenticated: true,
         headers: {
           "Content-Type": "multipart/form-data"
@@ -175,6 +187,7 @@ const AboutMe = () => {
       <div className="d-flex justify-content-end">
         <AButton
           click={onSubmitHandler}
+          disabled={isSending}
           btnLabel={
             <>
               <span className="me-2">Save</span>
@@ -210,7 +223,15 @@ const AboutMe = () => {
             change={onChangeHandler}
             input="phone"
             formLable={"Phone Number"}
-            className="col-12 col-md-6"
+            className="col-12 col-md-3"
+          />
+          <FormInputItem
+              autoComplete="qualification"
+              value={form.qualification.value}
+              change={onChangeHandler}
+              input="qualification"
+              formLable={"Qualification"}
+              className="col-12 col-md-3"
           />
         </div>
         <div className="row">
