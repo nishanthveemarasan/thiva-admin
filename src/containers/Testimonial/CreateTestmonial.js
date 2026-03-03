@@ -66,7 +66,7 @@ const CreateTestmonial = () => {
     if (uuid) {
       if (!selectedTestimonial) {
         dispatch(getTestimonial(uuid, setIsFetched));
-      } else if (selectedTestimonial) {
+      } else {
         setForm((prevState) => {
           const updatedForm = { ...prevState };
           for (const key in updatedForm) {

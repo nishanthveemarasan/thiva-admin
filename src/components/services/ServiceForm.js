@@ -54,14 +54,14 @@ const[isFetched, setIsFetched] = useState(false);
     if(uuid){
       if (!selectedService) {
         dispatch(getService(uuid, setIsFetched));
-      }else if(selectedService && uuid){
-        dispatch(serviceStoreActions.setSelectedService(null));
+      }else{
         updateForm(selectedService);
       }
     }else{
+      dispatch(serviceStoreActions.setSelectedService(null));
       updateForm();
     }
-  }, [selectedService]);
+  }, [selectedService, uuid]);
 
   const onChangeHandler = (value, name) => {
     let isValid = true;
