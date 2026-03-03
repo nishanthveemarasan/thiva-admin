@@ -19,6 +19,13 @@ const authSlice = createSlice({
                 type,
                 content
             }
+        },
+        logout(state){
+            state.name = "";
+            state.msg = {
+                content: "Logout Successfull!!",
+                success: true,
+            }
         }
     }
 })

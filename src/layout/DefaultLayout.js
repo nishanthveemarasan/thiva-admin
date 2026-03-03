@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
-
+import { useNavigate } from "react-router-dom";
 const DefaultLayout = () => {
+  const navigate = useNavigate()  
   useEffect(() => {
     const token = localStorage.getItem('ax_7689832T');
     if (!token) {

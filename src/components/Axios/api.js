@@ -1,15 +1,9 @@
 import API from "./axios";
 import CryptoJS from "crypto-js";
+import { generateSignature } from "./signature";
 
 export default class HTTP {
-  static #constructSignature = (path, method) => {
-    const timestamp = Date.now().toString();
-    const secret = import.meta.env.VITE_APP_SERVICE_KEY;
-    let dataToSign = `${method}api/${path}${timestamp}`;
-    const hash = CryptoJS.HmacSHA256(dataToSign, secret);
-    const signature = hash.toString(CryptoJS.enc.Hex);
-    return { signature, timestamp };
-}
+
   static request = async (method, url, data = null, options = {}) => {
     try {
       const config = {
@@ -25,9 +19,9 @@ export default class HTTP {
         config.headers["Authorization"] = `Bearer ${token}`;
       } 
       if(!options?.isAuthenticated){
-        const { signature, timestamp } = this.#constructSignature(url, method.toUpperCase());
+        const { signature, randomString } = generateSignature(url, method.toUpperCase());
         config.headers["X-Signature"] = signature;
-        config.headers["X-Timestamp"] = timestamp;
+        config.headers["X-Randomstring"] = randomString;
       }
   
       const response = await API(config);

@@ -23,8 +23,15 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import avatar9 from './../../assets/images/avatars/avatar9.png'
-
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { logout } from '../../store/reducer/authReducer'
 const AppHeaderDropdown = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const onLogoutHandler = () => {
+    dispatch(logout(navigate))
+  }
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
@@ -32,7 +39,7 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Account</CDropdownHeader>
-        <CDropdownItem href="#">
+        {/* <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
           Updates
           <CBadge color="info" className="ms-2">
@@ -83,8 +90,8 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem>
-        <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownDivider /> */}
+        <CDropdownItem onClick={onLogoutHandler}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Lock Account
         </CDropdownItem>

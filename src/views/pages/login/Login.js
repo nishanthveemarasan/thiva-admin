@@ -100,7 +100,7 @@ const Login = () => {
                       error={form.username.error}
                     />
                     <FormInputItem
-                      type="text"
+                      type="password"
                       value={form.password.value}
                       change={onChangeFormHandler}
                       input="password"
