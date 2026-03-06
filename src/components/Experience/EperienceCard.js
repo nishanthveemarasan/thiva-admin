@@ -15,15 +15,20 @@ import {
   cilTrash,
 } from "@coreui/icons";
 import HTTP from "../Axios/api";
-import { addExperience, deleteExperience, updateExperience } from "../../store/reducer/experienceReducer";
+import {
+  addExperience,
+  deleteExperience,
+  updateExperience,
+} from "../../store/reducer/experienceReducer";
 const EperienceCard = () => {
   const mapStateToProps = createSelector(
     [
-        (state) => state.experienceStore.experience,
-        (state) => state.experienceStore.selectedExperience
+      (state) => state.experienceStore.experience,
+      (state) => state.experienceStore.selectedExperience,
     ],
-    (experience,selectedExperience) => ({
-      experience,selectedExperience
+    (experience, selectedExperience) => ({
+      experience,
+      selectedExperience,
     })
   );
   const { experience, selectedExperience } = useSelector(mapStateToProps);
@@ -68,19 +73,19 @@ const EperienceCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        if(experience.length > 0) return; 
-        const response = await HTTP.request("GET", "user/experience", null, {
-                setLoading: isLoading,
-                isAuthenticated: true,
-              });
-        if(!response.error){
-            const {result} = response;
-            if(result.success){
-                let list = result.data.data;
-                dispatch(experienceStoreActions.setExperience(list));
-            }
+      if (experience.length > 0) return;
+      const response = await HTTP.request("GET", "user/experience", null, {
+        setLoading: isLoading,
+        isAuthenticated: true,
+      });
+      if (!response.error) {
+        const { result } = response;
+        if (result.success) {
+          let list = result.data.data;
+          dispatch(experienceStoreActions.setExperience(list));
         }
-    }
+      }
+    };
     fetchData();
   }, []);
 
@@ -117,10 +122,12 @@ const EperienceCard = () => {
         company: form.company.value.trim(),
         description: form.description.value.trim(),
       };
-      if(selectedExperience){
-        dispatch(updateExperience(formData, selectedExperience.uuid, setIsSubmitting));
-      }else{
-          dispatch(addExperience(formData, setIsSubmitting));
+      if (selectedExperience) {
+        dispatch(
+          updateExperience(formData, selectedExperience.uuid, setIsSubmitting)
+        );
+      } else {
+        dispatch(addExperience(formData, setIsSubmitting));
       }
       updateForm();
     }
@@ -151,6 +158,9 @@ const EperienceCard = () => {
       return copyObject;
     });
     setSubmitted(false);
+    if (selectedExperience?.uuid) {
+      dispatch(experienceStoreActions.selectedExperience(null));
+    }
   };
 
   return (

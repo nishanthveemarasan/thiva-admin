@@ -144,6 +144,9 @@ const EducationCard = () => {
       return copyObject;
     });
     setSubmitted(false);
+    if(selectedEducation?.uuid){
+      dispatch(experienceStoreActions.selectedEducation(null));
+    }
   };
   return (
     <>

@@ -20,12 +20,6 @@ const AboutMe = () => {
      validators: [required],
    },
    last_name: {
-     value: "",
-     error: "Last Name is required",
-     valid: false,
-     validators: [required],
-   },
-   last_name: {
     value: "",
     error: "Last Name is required",
     valid: false,
